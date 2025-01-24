@@ -1,9 +1,8 @@
 {
-  "name": "pro-components",
-  "private": true,
+  "name": "@MhammdAli/pro-component",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/ant-design/pro-components.git"
+    "url": "git+https://github.com/MhammdAli/pro-components.git"
   },
   "license": "MIT",
   "workspaces": [
@@ -177,5 +176,5 @@
     "commit-msg": "fabric verify-commit"
   },
   "packageManager": "pnpm@9.6.0",
-  "version": ""
+  "version": "1.0.0"
 }
