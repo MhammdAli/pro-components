@@ -169,6 +169,7 @@ export type ProColumns<T = any, ValueType = 'text'> = ProColumnType<
 >;
 
 export type BorderedType = 'search' | 'table';
+export type SortingMode = 'server' | 'client';
 
 export type Bordered =
   | boolean
@@ -200,6 +201,8 @@ export type ProTableProps<DataSource, U, ValueType = 'text'> = {
    * @name 列配置能力，支持一个数组
    */
   columns?: ProColumns<DataSource, ValueType>[];
+  defaultColumnDefs?: ProColumnType<DataSource, ValueType>;
+  sortingMode?: SortingMode;
   /**
    * @name ListToolBar 的属性
    */

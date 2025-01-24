@@ -450,6 +450,8 @@ const ProTable = <
     pagination: propsPagination,
     actionRef: propsActionRef,
     columns: propsColumns = [],
+    defaultColumnDefs,
+    sortingMode = 'client',
     toolBarRender,
     optionsRender,
     onLoad,
@@ -771,6 +773,8 @@ const ProTable = <
   const tableColumn = useMemo(() => {
     return genProColumnToColumn<T>({
       columns: propsColumns,
+      defaultColumnDefs,
+      sortingMode,
       counter,
       columnEmptyText,
       type,
@@ -782,6 +786,8 @@ const ProTable = <
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     propsColumns,
+    defaultColumnDefs,
+    sortingMode,
     counter?.sortKeyColumns,
     counter?.columnsMap,
     columnEmptyText,

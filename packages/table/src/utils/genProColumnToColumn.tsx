@@ -13,13 +13,16 @@ import type { TableColumnType, TableProps } from 'antd';
 import { Table } from 'antd';
 import { AnyObject } from 'antd/es/_util/type';
 import type { ContainerType } from '../Store/Provide';
-import type { ProColumns } from '../typing';
+import type { ProColumns, ProColumnType, SortingMode } from '../typing';
 import {
   columnRender,
   defaultOnFilter,
   renderColumnsTitle,
 } from './columnRender';
 import { genColumnKey } from './index';
+import { get, includes, isString, set } from 'lodash';
+import { SortOrder } from 'antd/es/table/interface';
+import { _defaultComparator } from './sorting/Comparator';
 
 type ColumnToColumnReturnType<T> = (TableColumnType<T> & {
   index?: number;
@@ -27,6 +30,8 @@ type ColumnToColumnReturnType<T> = (TableColumnType<T> & {
 
 type ColumnToColumnParams<T> = {
   columns: ProColumns<T, any>[];
+  defaultColumnDefs ?: ProColumnType<T,any>;
+  sortingMode ?: SortingMode,
   counter: ReturnType<ContainerType>;
   columnEmptyText: ProFieldEmptyText;
   type: ProSchemaComponentTypes;
@@ -46,6 +51,8 @@ export function genProColumnToColumn<T extends AnyObject>(
 ): ColumnToColumnReturnType<T> {
   const {
     columns,
+    defaultColumnDefs,
+    sortingMode,
     counter,
     columnEmptyText,
     type,
@@ -59,6 +66,7 @@ export function genProColumnToColumn<T extends AnyObject>(
 
   return columns
     ?.map((columnProps, columnsIndex) => {
+      columnProps = { ...defaultColumnDefs, ...columnProps }
       if (columnProps === Table.EXPAND_COLUMN) return columnProps;
       if (columnProps === Table.SELECTION_COLUMN) return columnProps;
       const {
@@ -82,6 +90,25 @@ export function genProColumnToColumn<T extends AnyObject>(
           ...columnProps,
         };
       }
+
+      /**
+       * 是不是展开行和多选按钮
+       */
+      const isExtraColumns =
+        columnProps === Table.EXPAND_COLUMN ||
+        columnProps === Table.SELECTION_COLUMN;
+
+      if (isExtraColumns) {
+        return {
+          index: columnsIndex,
+          isExtraColumns: true,
+          hideInSearch: true,
+          hideInTable: false,
+          hideInForm: true,
+          hideInSetting: true,
+          extraColumn: columnProps,
+        };
+      }
       const config = counter.columnsMap[columnKey] || {
         fixed: columnProps.fixed,
       };
@@ -96,12 +123,23 @@ export function genProColumnToColumn<T extends AnyObject>(
 
       let keyName: string | number | symbol = rowKey as string;
 
+      // prepare sorter 
+      var _sorter = {multiple : 0};
+      if(sortingMode == 'client')
+        set(_sorter,'compare',(a: T, b: T, sortOrder?: SortOrder) => {
+            return _defaultComparator(
+              get(a,columnProps.dataIndex),
+              get(b,columnProps.dataIndex)
+            )  
+        })
+     
       const tempColumns = {
         index: columnsIndex,
         key: columnKey,
+        sorter : _sorter,
         ...columnProps,
         title: renderColumnsTitle(columnProps),
-        valueEnum,
+        valueEnum, 
         filters:
           filters === true
             ? proFieldParsingValueEnumToArray(
@@ -120,7 +158,12 @@ export function genProColumnToColumn<T extends AnyObject>(
               { ...columnProps, key: columnKey } as ProColumns<T, any>,
             )
           : undefined,
-        render: (text: any, rowData: T, index: number) => {
+        render: (text: any, rowData: T, index: number) => { 
+          // Workaround
+          const isDeepPath = (str : string) => includes(str, '.'); 
+          if(isString(columnProps.dataIndex) && isDeepPath(columnProps.dataIndex)) text = get(rowData,columnProps.dataIndex,text);
+          /////////////////////////////////////////////////////////////
+          
           if (typeof rowKey === 'function') {
             keyName = rowKey(rowData, index) as string;
           }
@@ -163,7 +206,9 @@ export function genProColumnToColumn<T extends AnyObject>(
       };
       return omitUndefinedAndEmptyArr(tempColumns);
     })
-    ?.filter(
-      (item) => !item.hideInTable,
-    ) as unknown as ColumnToColumnReturnType<T>;
+    ?.filter((item) => !item.hideInTable) as unknown as (TableColumnType<T> & {
+    index?: number;
+    isExtraColumns?: boolean;
+    extraColumn?: typeof Table.EXPAND_COLUMN | typeof Table.SELECTION_COLUMN;
+  })[];
 }
