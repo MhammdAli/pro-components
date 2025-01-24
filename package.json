@@ -1,8 +1,11 @@
 {
-  "name": "@MhammdAli/pro-component",
+  "name": "pro-component-new",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MhammdAli/pro-components.git"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "license": "MIT",
   "workspaces": [
