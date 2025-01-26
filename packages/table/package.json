@@ -1,6 +1,6 @@
 {
   "name": "antd-pro-table",
-  "version": "3.18.5",
+  "version": "3.18.8",
   "description": "🏆 Use Ant Design Table like a Pro!",
   "keywords": [
     "antd",
@@ -37,7 +37,7 @@
     "@ant-design/cssinjs": "^1.21.1",
     "@ant-design/icons": "^5.0.0",
     "@ant-design/pro-card": "2.9.4",
-    "@ant-design/pro-field": "3.0.1",
+    "antd-pro-field": "3.0.1",
     "@ant-design/pro-form": "2.31.4",
     "@ant-design/pro-provider": "2.15.3",
     "@ant-design/pro-utils": "2.16.3",
