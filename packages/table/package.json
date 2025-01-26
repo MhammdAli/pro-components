@@ -12,7 +12,7 @@
   "bugs": "http://github.com/umijs/plugins/issues",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ant-design/pro-components.git"
+    "url": "git+https://github.com/MhammdAli/pro-components.git"
   },
   "license": "MIT",
   "sideEffects": false,
