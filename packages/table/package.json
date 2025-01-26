@@ -1,5 +1,5 @@
 {
-  "name": "@ant-design/pro-table",
+  "name": "pro-table-pro",
   "version": "3.18.6",
   "description": "🏆 Use Ant Design Table like a Pro!",
   "keywords": [
@@ -70,5 +70,6 @@
   "authors": [
     "chencheng <sorrycc@gmail.com> (https://github.com/sorrycc)",
     "chenshuai2144 <qixian.cs@outlook.om> (https://github.com/chenshuai2144)"
-  ]
+  ],
+  "gitHead": "ad1969f4b08cf48e427f6baa1f8d5de3b3dd6a56"
 }
